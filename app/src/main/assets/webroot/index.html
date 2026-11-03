@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>ModuleHub</title>
+<style>
+
+:root{--bg:#0e1013;--surface:#171a20;--surface2:#20242c;--text:#e8eaed;--muted:#9aa0a6;--line:#2a2f38;--accent:#f5b301;--on-accent:#1a1400;--ok:#34c759;--bad:#ff453a;--r:18px;
+--it:var(--window-inset-top,env(safe-area-inset-top,0px));--ib:var(--window-inset-bottom,env(safe-area-inset-bottom,0px))}
+@media (prefers-color-scheme:light){:root{--bg:#f3f4f7;--surface:#fff;--surface2:#eceef2;--text:#14171c;--muted:#5f6670;--line:#e2e5ea}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding-top:var(--it);padding-bottom:calc(76px + var(--ib))}
+.appbar{position:sticky;top:var(--it);z-index:5;background:var(--bg);padding:18px 18px 10px;display:flex;align-items:center;gap:14px}
+.logo{width:46px;height:46px;border-radius:14px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-weight:800;font-size:20px;flex:none}
+.appbar h1{font-size:19px;margin:0;line-height:1.2}
+.appbar small{color:var(--muted)}
+.pill{margin-left:auto;font-size:12px;padding:5px 10px;border-radius:999px;background:var(--surface2);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}.dot.off{background:var(--bad)}
+main{padding:4px 14px 14px;max-width:720px;margin:0 auto}
+section{display:none}section.on{display:block}
+.banner{background:var(--surface2);border:1px dashed var(--accent);border-radius:14px;padding:10px 14px;margin:6px 0 12px;font-size:13px;color:var(--muted)}
+.card{background:var(--surface);border-radius:var(--r);padding:16px;margin:0 0 12px;border:1px solid var(--line)}
+.card h2{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--surface2);border-radius:12px;padding:8px 12px;font-size:13px}
+.chip b{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:1px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:14px}
+.kv span:nth-child(odd){color:var(--muted)}.kv span:nth-child(even){text-align:right;word-break:break-word}
+.meterrow{margin:0 0 12px}.meterrow:last-child{margin:0}
+.mhead{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.mhead span:last-child{color:var(--muted);font-size:13px}
+.meter{height:8px;background:var(--surface2);border-radius:99px;position:relative;overflow:hidden}
+.meter i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:99px;transition:width .4s}
+.meter u{position:absolute;top:0;bottom:0;width:2px;background:var(--bad);opacity:.8}
+.row{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0;padding-top:0}
+.row:last-child{padding-bottom:0}
+.lbl{flex:1;min-width:0}.lbl b{display:block;font-weight:600}.lbl small{color:var(--muted);display:block;font-size:12.5px}
+.block{padding:12px 0;border-top:1px solid var(--line)}.block:first-of-type{border-top:0;padding-top:0}.block:last-child{padding-bottom:0}
+.block .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.val{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums}
+.switch{position:relative;width:50px;height:30px;flex:none}
+.switch input{opacity:0;position:absolute;inset:0;width:100%;height:100%;margin:0;z-index:2}
+.switch i{position:absolute;inset:0;background:var(--surface2);border-radius:99px;border:1px solid var(--line);transition:.2s}
+.switch i:after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:.2s}
+.switch input:checked+i{background:var(--accent);border-color:var(--accent)}
+.switch input:checked+i:after{transform:translateX(20px);background:var(--on-accent)}
+.seg{display:flex;background:var(--surface2);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:none;color:var(--muted);padding:9px 6px;border-radius:11px;font:inherit;font-size:13.5px;font-weight:600}
+.seg button.on{background:var(--accent);color:var(--on-accent)}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px;margin:0}
+input[type=text]{width:100%;background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:11px 12px;font:inherit}
+input[type=text]:focus{outline:2px solid var(--accent);border-color:transparent}
+.tools{display:flex;gap:10px;flex-wrap:wrap}
+button.btn{border:0;border-radius:14px;padding:12px 16px;font:inherit;font-weight:700;background:var(--surface2);color:var(--text)}
+button.btn.pri{background:var(--accent);color:var(--on-accent)}
+button.btn.danger{background:var(--bad);color:#fff}
+button.btn:disabled{opacity:.45}
+pre{margin:0;white-space:pre-wrap;word-break:break-all;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;max-height:55vh;overflow:auto;color:var(--muted)}
+.savebar{position:fixed;left:0;right:0;bottom:calc(64px + var(--ib));padding:10px 14px;display:none;gap:10px;justify-content:center;z-index:6;background:linear-gradient(transparent,var(--bg) 40%)}
+.savebar.on{display:flex}.savebar .btn{flex:1;max-width:340px;box-shadow:0 4px 14px #0004}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;padding:6px 8px calc(6px + var(--ib));z-index:7}
+nav button{flex:1;border:0;background:none;color:var(--muted);font:inherit;font-size:12px;font-weight:600;padding:6px 0;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--accent)}
+#toast{position:fixed;left:50%;bottom:calc(150px + var(--ib));transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:20;max-width:90%}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:#0009;display:none;place-items:center;z-index:30;padding:20px}
+.modal.on{display:grid}
+.modal .box{background:var(--surface);border-radius:22px;padding:22px;max-width:340px;width:100%}
+.modal h3{margin:0 0 8px}.modal p{margin:0 0 18px;color:var(--muted)}
+.modal .tools{justify-content:flex-end}
+[hidden]{display:none!important}
+select{width:100%;background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:11px 12px;font:inherit}
+.warnbox{background:var(--surface2);border:1px solid var(--accent);border-radius:14px;padding:12px 14px;margin:6px 0 12px;font-size:13px}
+.chk{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}.chk:first-child{border-top:0}
+.chk i{font-style:normal;width:22px;flex:none;text-align:center}
+.chk div small{display:block;color:var(--muted);font-size:12.5px}
+.chk.ok i{color:var(--ok)}.chk.warn i{color:#f5b301}.chk.bad i{color:var(--bad)}.chk.info i{color:var(--muted)}
+.hot{color:var(--bad);font-weight:700}
+.hint{display:block;color:var(--muted);font-size:12.5px;margin-top:8px}
+
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{background:var(--surface2);border-radius:14px;padding:12px}
+.tile b{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.tile span{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.tile small{color:var(--muted);font-size:12px;margin-left:3px}
+.tile.wide{grid-column:1/-1}.tile.wide span{font-size:15px;font-weight:700;word-break:break-all}
+.field{display:flex;gap:10px;margin-bottom:12px}.field>*{flex:1}
+.lab{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.sess{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
+.sess:first-of-type{border-top:0}
+.sess input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent);flex:none}
+.sess .meta{flex:1;min-width:0}.sess .meta b{display:block}.sess .meta small{color:var(--muted);font-size:12.5px}
+.sess button{border:0;background:var(--surface2);color:var(--text);border-radius:10px;padding:8px 11px;font:inherit;font-size:13px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:8px 4px;text-align:right;border-top:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-size:12px;font-weight:600;border-top:0}
+.good{color:var(--ok);font-weight:700}.badv{color:var(--bad);font-weight:700}
+.diag{margin:0;padding-left:18px}.diag li{margin:6px 0}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin:2px 0 8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+svg.chart{width:100%;height:auto;display:block}
+svg.chart text{fill:var(--muted);font-size:9px}
+svg.chart .grid{stroke:var(--line);stroke-width:1}
+.verdict{background:var(--surface2);border-radius:14px;padding:12px 14px;margin-top:12px;font-size:14px}
+p.t{margin:0 0 10px}ol.t,ul.t{margin:0 0 10px;padding-left:20px}ol.t li,ul.t li{margin:5px 0}
+.row2{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.row2:first-of-type{border-top:0;padding-top:0}.row2:last-child{padding-bottom:0}
+.chipx{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border-radius:99px;padding:6px 6px 6px 12px;margin:0 6px 6px 0;font-size:13px}
+.chipx button{border:0;background:var(--line);color:var(--text);border-radius:50%;width:22px;height:22px;font-size:13px;line-height:1}
+.pk{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px;word-break:break-all}
+.pk input{width:20px;height:20px;accent-color:var(--accent);flex:none}
+.scroll{max-height:260px;overflow:auto;margin-top:8px}
+.sticky{position:sticky;bottom:calc(76px + var(--ib));z-index:6;padding:10px 0;background:linear-gradient(transparent,var(--bg) 40%)}
+</style>
+</head>
+<body>
+<div class="appbar">
+  <div class="logo">M</div>
+  <div><h1>ModuleHub</h1><small id="sub">Game Boost · terukur, bukan gimmick</small></div>
+  <div class="pill"><span class="dot off" id="dot"></span><span id="state">siap</span></div>
+</div>
+<main>
+  <div class="banner" id="demo" hidden>Mode demo: tidak terhubung ke akses root, data yang tampil hanya contoh.</div>
+
+  <section id="tab-rec" class="on">
+    <div class="card"><h2>Rekam sesi</h2>
+      <div class="field"><div><span class="lab">Nama sesi</span><input type="text" id="label" value="baseline" maxlength="24" autocapitalize="off" spellcheck="false"></div></div>
+      <div class="field">
+        <div><span class="lab">Interval sampel</span><select id="interval"><option value="2" selected>2 detik</option><option value="1">1 detik</option><option value="3">3 detik</option><option value="5">5 detik</option></select></div>
+        <div><span class="lab">Durasi maksimum</span><select id="maxmin"><option value="10">10 menit</option><option value="20">20 menit</option><option value="30" selected>30 menit</option><option value="60">60 menit</option></select></div>
+      </div>
+      <div class="tools"><button class="btn pri" id="b-start">Mulai rekam</button><button class="btn danger" id="b-stop" disabled>Stop</button></div>
+      <span class="hint">1) Tekan Mulai.  2) Buka game dan main 3 sampai 5 menit di adegan yang sama.  3) Kembali ke sini dan tekan Stop. Perekaman jalan di latar belakang.</span>
+    </div>
+    <div class="card"><h2>Langsung</h2>
+      <div class="tiles">
+        <div class="tile"><b>FPS</b><span id="t-fps">-</span></div>
+        <div class="tile"><b>Frame terlama</b><span id="t-ft">-</span><small>ms</small></div>
+        <div class="tile"><b>GPU</b><span id="t-gpu">-</span><small>MHz</small></div>
+        <div class="tile"><b>Beban GPU</b><span id="t-busy">-</span><small>%</small></div>
+        <div class="tile"><b>CPU kecil / besar</b><span id="t-cpu">-</span><small>MHz</small></div>
+        <div class="tile"><b>Suhu SoC / baterai</b><span id="t-temp">-</span><small>°C</small></div>
+        <div class="tile wide"><b>Aplikasi di depan</b><span id="t-pkg">-</span></div>
+      </div>
+      <span class="hint">Perekam sendiri memakai sedikit CPU. Untuk perbandingan yang adil, pakai interval yang sama di semua sesi.</span>
+    </div>
+  </section>
+
+  <section id="tab-sessions">
+    <div class="card"><h2>Sesi tersimpan</h2><div id="list"><small style="color:var(--muted)">Memuat…</small></div>
+      <div class="tools" style="margin-top:12px"><button class="btn" id="b-reload">Muat ulang</button><button class="btn pri" id="b-compare" disabled>Bandingkan (pilih 2)</button></div></div>
+    <div id="detail"></div>
+    <div id="compare"></div>
+  </section>
+
+  <section id="tab-boost">
+    <div class="card"><h2>Status Game Boost</h2><div class="kv" id="gbstat"></div>
+      <div class="row2" style="margin-top:12px"><div class="lbl"><b>Aktifkan Game Boost</b><small>Mati = tidak ada perubahan sistem sama sekali (untuk baseline)</small></div><label class="switch"><input type="checkbox" id="gb-master"><i></i></label></div></div>
+    <div class="card"><h2>Game yang diberi profil</h2><div id="gchips"><small style="color:var(--muted)">Belum ada game dipilih.</small></div>
+      <div class="tools" style="margin-top:8px"><button class="btn" id="b-loadapps">Pilih dari aplikasi terpasang</button></div>
+      <div id="apppick" hidden><input type="text" id="appq" placeholder="Cari nama paket…" style="margin-top:10px"><div class="scroll" id="applist"></div></div></div>
+    <div id="gbform"></div>
+    <div class="card"><h2>Resolusi layar (manual)</h2>
+      <small style="color:var(--muted)">Efek terbesar pada game yang dibatasi GPU. Atur SEBELUM membuka game. Layar dan ukuran UI berubah sementara, dan otomatis dikembalikan saat reboot.</small>
+      <div class="field" style="margin-top:10px"><div><span class="lab">Skala</span><select id="dispct"><option value="85">85%</option><option value="75" selected>75%</option><option value="67">67%</option></select></div></div>
+      <div class="kv" id="dispstat" style="margin-bottom:12px"></div>
+      <div class="tools"><button class="btn pri" id="b-dset">Terapkan</button><button class="btn" id="b-dreset">Kembalikan</button></div></div>
+    <div class="card"><h2>Alat</h2><div id="gchk"></div>
+      <div class="tools" style="margin-top:12px"><button class="btn" id="b-gcheck">Cek kompatibilitas</button><button class="btn danger" id="b-gstop">Hentikan &amp; kembalikan</button></div></div>
+    <div class="sticky"><div class="tools"><button class="btn pri" id="b-gsave" style="flex:1" disabled>Simpan &amp; terapkan</button></div></div>
+  </section>
+
+  <section id="tab-help">
+    <div class="card"><h2>Apa yang disentuh modul ini</h2>
+      <p class="t">Semua perubahan hanya aktif selama game pilihanmu di depan, dan dikembalikan otomatis saat game ditutup.</p>
+      <ul class="t">
+        <li><b>Pacing suhu adaptif</b>: batas frekuensi CPU cluster besar diturunkan satu langkah saat SoC melewati suhu target, dinaikkan lagi saat dingin. Tujuannya menjaga kapasitas termal untuk GPU supaya tidak throttling mendadak.</li>
+        <li><b>Lantai GPU</b> dan <b>adrenoboost</b>: mengurangi jeda naik frekuensi GPU (patah-patah saat beban mendadak).</li>
+        <li><b>Respons CPU</b>: mempercepat kenaikan frekuensi (rate limit schedutil).</li>
+        <li><b>Memori</b>: swappiness lebih rendah selama game agar CPU tidak terbebani kompresi swap, dan opsi membersihkan aplikasi latar.</li>
+        <li><b>Resolusi</b>: pengaruh paling besar untuk game GPU-bound.</li>
+      </ul>
+      <p class="t">Tidak ada jaminan naik FPS. Efeknya berbeda tiap game dan tiap HP, jadi buktikan dengan tab Rekam dan Sesi.</p></div>
+    <div class="card"><h2>Cara membuktikan</h2>
+      <ol class="t"><li>Matikan saklar Game Boost, rekam sesi <b>boost_off</b> 5 menit.</li><li>Nyalakan lagi, biarkan HP dingin, rekam sesi <b>boost_on</b> dengan game dan adegan sama.</li><li>Tab Sesi: centang keduanya, tekan Bandingkan.</li></ol>
+      <p class="t">Kolom "Game Boost aktif (%)" menunjukkan seberapa lama profil benar-benar aktif selama sesi. Selisih kurang dari sekitar 2 FPS dianggap noise.</p></div>
+
+    <div class="card"><h2>Tes A/B yang adil (detail)</h2>
+      <ol class="t">
+        <li>Game, adegan, dan pengaturan grafis harus sama.</li>
+        <li>Mulai dari HP dingin (suhu baterai di bawah 35 °C), aplikasi lain ditutup.</li>
+        <li>Rekam 5 menit <b>baseline</b> dengan semua modul tuning dikembalikan ke bawaan.</li>
+        <li>Biarkan HP dingin lagi, aktifkan tweak yang ingin diuji, rekam 5 menit dengan nama berbeda.</li>
+        <li>Buka tab Sesi, centang dua sesi, tekan Bandingkan.</li>
+      </ol>
+      <p class="t">Selisih di bawah sekitar 2 FPS dianggap noise, bukan perbaikan nyata. Ulangi tes kalau hasilnya tipis.</p></div>
+    <div class="card"><h2>Cara membaca hasil</h2>
+      <ul class="t">
+        <li><b>GPU turun saat suhu naik</b>: itu thermal throttling, penyebab paling umum FPS turun di tengah sesi.</li>
+        <li><b>Beban GPU tinggi (85% ke atas)</b>: GPU jadi penghambat. Turunkan resolusi atau efek grafis.</li>
+        <li><b>Beban GPU rendah tapi FPS rendah</b>: kemungkinan CPU atau game itu sendiri yang menghambat.</li>
+        <li><b>Frame terlama besar</b>: ada patah-patah (stutter) walau rata-rata FPS terlihat bagus.</li>
+      </ul>
+      <p class="t">Diagnosis di halaman Sesi adalah dugaan berdasarkan pola data, bukan kepastian.</p></div>
+    <div class="card"><h2>Yang umumnya benar-benar membantu</h2>
+      <ul class="t">
+        <li>Turunkan resolusi atau kualitas grafis di dalam game.</li>
+        <li>Kunci FPS ke angka yang stabil. 40 atau 30 yang rata sering lebih halus dari 60 yang naik turun.</li>
+        <li>Jaga suhu: lepas casing tebal, jangan main sambil mengisi daya, hindari panas matahari.</li>
+        <li>Tutup aplikasi latar, matikan penghemat baterai yang membatasi performa.</li>
+        <li>Coba opsi renderer di dalam game (OpenGL atau Vulkan) dan ukur hasilnya di sini.</li>
+      </ul></div>
+    <div class="card"><h2>Yang sering hanya gimmick</h2>
+      <ul class="t">
+        <li>Memaksa GPU, bus, atau rail daya selalu menyala dan mengunci frekuensi. Hasilnya lebih panas, lalu throttling, lalu FPS turun.</li>
+        <li>Klaim boost tanpa angka. Kalau tidak terlihat di grafik sesi, anggap tidak ada.</li>
+      </ul></div>
+  </section>
+</main>
+
+<nav>
+  <button data-tab="rec" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>Rekam</button>
+  <button data-tab="sessions"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 5-7"/></svg>Sesi</button>
+  <button data-tab="boost"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Boost</button>
+  <button data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h0"/></svg>Bantuan</button>
+</nav>
+<div id="toast"></div>
+<div class="modal" id="modal"><div class="box"><h3 id="m-t"></h3><p id="m-p"></p><div class="tools"><button class="btn" id="m-no">Batal</button><button class="btn pri" id="m-yes">Ya</button></div></div></div>
+
+<script>
+const MID = 'modulehub_game_boost', MOD = (typeof ksu !== 'undefined' && typeof ksu.moduleDir === 'function') ? ksu.moduleDir() : '/data/adb/modules/' + MID, MON = MOD + '/monitor.sh';
+const hasKsu = typeof ksu !== 'undefined' && typeof ksu.exec === 'function';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.documentElement.style.setProperty('--accent', '#4c8dff');
+document.documentElement.style.setProperty('--on-accent', '#ffffff');
+if (!hasKsu) $('#demo').hidden = false;
+
+/* ---------- exec ---------- */
+function exec(cmd) {
+  return new Promise(resolve => {
+    if (!hasKsu) { resolve(mock(cmd)); return; }
+    const cb = 'cb_' + Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const timer = setTimeout(() => { delete window[cb]; resolve({ errno: -2, out: '', err: 'timeout' }); }, 60000);
+    window[cb] = (errno, out, err) => { clearTimeout(timer); delete window[cb]; resolve({ errno, out: out || '', err: err || '' }); };
+    try { ksu.exec(cmd, '{}', cb); } catch (e) { clearTimeout(timer); delete window[cb]; resolve({ errno: -1, out: '', err: String(e) }); }
+  });
+}
+
+/* ---------- demo ---------- */
+const DEMO = {};
+function genCsv(label, startEpoch, throttle, hot) {
+  let o = '#label=' + label + '\n#start=' + startEpoch + '\n#interval=2\n#device=Redmi 9T\n#cols=t,pkg,fps10,maxft_ms,gpu_mhz,gpu_busy,cpu_l_mhz,cpu_b_mhz,soc_c,bat_c\n';
+  let seed = label.length * 7 + 3; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  for (let t = 0; t <= 300; t += 2) {
+    const k = t / 300, soc = 44 + k * (hot ? 30 : 18) + rnd() * 1.5, bat = 31 + k * (hot ? 11 : 6);
+    const g = throttle === 'mild' ? 650 - k * 60 : throttle ? 650 - k * (hot ? 330 : 190) : 650 - k * 20, f = Math.max(18, (g / 650) * 58 + (rnd() - .5) * 5 - (rnd() < .05 ? 14 : 0));
+    o += [t, 'com.game.demo', Math.round(f * 10), Math.round(20 + rnd() * 25 + (rnd() < .04 ? 90 : 0)), Math.round(g), Math.round(88 - k * 8), 1400, 1800, soc.toFixed(0), bat.toFixed(0)].join(',') + (label.includes('on') ? ',1,' + Math.round(2000 - k * 350) : ',0,-1') + '\n';
+  }
+  return o + '#end=' + (startEpoch + 300) + '\n';
+}
+DEMO['20261103-100000_baseline.csv'] = genCsv('baseline', 1793700000, true, false);
+DEMO['20261103-103000_boost_on.csv'] = genCsv('boost_on', 1793701800, 'mild', false);
+let demoRec = null;
+function mock(cmd) {
+  const ok = out => ({ errno: 0, out, err: '' });
+  if (cmd.includes('monitor.sh list')) return ok(Object.keys(DEMO).map(k => { const m = k.match(/_(.*)\.csv/)[1]; return 'S|' + k + '|' + m + '|' + (m === 'baseline' ? 1793700000 : 1793701800) + '|151|300'; }).join('\n'));
+  const g = cmd.match(/monitor\.sh get (\S+)/); if (g) return ok(DEMO[g[1]] || '');
+  if (cmd.includes('monitor.sh del')) { const d = cmd.match(/del (\S+)/)[1]; delete DEMO[d]; return ok('OK|dihapus'); }
+  if (cmd.includes('monitor.sh start')) { demoRec = Date.now(); return ok('OK|demo.csv'); }
+  if (cmd.includes('monitor.sh stop')) { demoRec = null; return ok('OK|dihentikan'); }
+  if (cmd.includes('monitor.sh status')) return ok(demoRec ? 'REC|1|demo.csv|' + Math.round((Date.now() - demoRec) / 1000) : 'REC|0');
+  if (cmd.includes('monitor.sh last')) return ok(demoRec ? [10, 'com.game.demo', 540 + Math.round(Math.random() * 40), 38, 620, 85, 1400, 1800, 52, 34].join(',') : '');
+  if (cmd.includes('gamed.sh status')) return ok('GB|1|' + (demoGame ? '1|com.game.demo|1804|1' : '0||0|0'));
+  if (cmd.includes('game.sh list')) return ok(['com.game.demo', 'com.tencent.ig', 'com.mobile.legends', 'com.whatsapp', 'com.instagram.android'].map(x => 'PKG|' + x).join('\n'));
+  if (cmd.includes('cat ' + GBCONF)) return ok('MASTER=1\nGAMES="com.game.demo"\nPACE=1\nPACE_TARGET_C=62\nPACE_MIN_PCT=60\nGPU_FLOOR_PCT=0\n');
+  if (cmd.includes('setcfg.sh') || cmd.includes('tools.sh')) return ok('OK');
+  if (cmd.includes('display.sh status')) return ok('DISP|Physical size: 1080x2340 |Physical density: 400 |0');
+  if (cmd.includes('display.sh')) return ok('OK|demo');
+  if (cmd.includes('check.sh')) return ok(['CHK|ok|Deteksi game|cpuset top-app tersedia','CHK|ok|Pacing CPU|2 dari 2 cluster bisa diatur','CHK|info|Respons CPU (schedutil)|tidak tersedia','CHK|ok|Lantai GPU|tersedia','CHK|ok|Sensor suhu baterai|terbaca'].join('\n'));
+  return ok('');
+}
+let demoGame = true;
+const GBCONF = '/data/adb/modulehub_game_boost.conf';
+
+/* ---------- util ---------- */
+let toastT;
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2400); }
+function confirmBox(title, text) {
+  return new Promise(res => {
+    $('#m-t').textContent = title; $('#m-p').textContent = text; $('#modal').classList.add('on');
+    const done = v => { $('#modal').classList.remove('on'); $('#m-yes').onclick = $('#m-no').onclick = null; res(v); };
+    $('#m-yes').onclick = () => done(true); $('#m-no').onclick = () => done(false);
+  });
+}
+const mmss = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+const f1 = v => (v == null || !isFinite(v)) ? '-' : (Math.round(v * 10) / 10).toString();
+const f0 = v => (v == null || !isFinite(v)) ? '-' : Math.round(v).toString();
+
+/* ---------- tab ---------- */
+let cur = 'rec';
+function go(t) {
+  cur = t;
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+  document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
+  if (t === 'sessions') loadSessions(); if (t === 'rec') refreshRec(); if (t === 'boost') boostInit();
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => go(b.dataset.tab));
+
+/* ---------- rekam ---------- */
+let recording = false;
+async function refreshRec() {
+  const r = await exec('sh ' + MON + ' status');
+  const p = r.out.trim().split('\n')[0].split('|');
+  recording = p[0] === 'REC' && p[1] === '1';
+  $('#dot').classList.toggle('off', !recording);
+  $('#state').textContent = recording ? 'merekam ' + mmss(+p[3] || 0) : 'siap';
+  $('#b-start').disabled = recording; $('#b-stop').disabled = !recording;
+  if (!recording) return;
+  const l = await exec('sh ' + MON + ' last');
+  const c = l.out.trim().split(',');
+  if (c.length < 10) return;
+  const neg = v => (v === '' || +v < 0) ? '-' : v;
+  $('#t-fps').textContent = f1(+c[2] / 10); $('#t-ft').textContent = c[3]; $('#t-gpu').textContent = neg(c[4]); $('#t-busy').textContent = neg(c[5]);
+  $('#t-cpu').textContent = neg(c[6]) + ' / ' + neg(c[7]); $('#t-temp').textContent = neg(c[8]) + ' / ' + neg(c[9]); $('#t-pkg').textContent = c[1] || '-';
+}
+$('#b-start').onclick = async () => {
+  const label = $('#label').value.trim();
+  if (!/^[A-Za-z0-9_.-]{1,24}$/.test(label)) { toast('Nama sesi: huruf, angka, _ . - (maks 24)'); return; }
+  const r = await exec('sh ' + MON + " start '" + label + "' " + $('#interval').value + ' ' + $('#maxmin').value);
+  toast(r.out.startsWith('OK') ? 'Merekam. Buka game sekarang.' : (r.out.split('|')[1] || 'Gagal memulai').trim());
+  refreshRec();
+};
+$('#b-stop').onclick = async () => { toast('Menghentikan…'); await exec('sh ' + MON + ' stop'); toast('Rekaman disimpan'); refreshRec(); };
+
+/* ---------- analisis ---------- */
+function parseCsv(txt) {
+  const meta = {}, rows = [];
+  txt.split('\n').forEach(l => {
+    l = l.trim(); if (!l) return;
+    if (l[0] === '#') { const i = l.indexOf('='); if (i > 0) meta[l.slice(1, i)] = l.slice(i + 1); return; }
+    const p = l.split(',');
+    if (p.length < 10) return;
+    const n = x => (x === '' || x == null) ? NaN : +x;
+    rows.push({ t: n(p[0]), pkg: p[1], fps: n(p[2]) / 10, ft: n(p[3]), gpu: n(p[4]), busy: n(p[5]), cl: n(p[6]), cb: n(p[7]), soc: n(p[8]), bat: n(p[9]), boost: p.length > 10 ? n(p[10]) : 0, cap: p.length > 11 ? n(p[11]) : NaN });
+  });
+  return { meta, rows };
+}
+const avg = a => { a = a.filter(v => isFinite(v) && v >= 0); return a.length ? a.reduce((x, y) => x + y, 0) / a.length : NaN; };
+const maxv = a => { a = a.filter(v => isFinite(v) && v >= 0); return a.length ? Math.max(...a) : NaN; };
+function analyze(s) {
+  const skip = /launcher|systemui|kernelsu|magisk|apatch|inputmethod|keyboard|settings|home/i, cnt = {};
+  s.rows.forEach(r => { if (r.fps > 0 && r.pkg && !skip.test(r.pkg)) cnt[r.pkg] = (cnt[r.pkg] || 0) + 1; });
+  const pkg = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0] || '';
+  const rows = s.rows.filter(r => r.pkg === pkg && r.fps > 0);
+  if (rows.length < 5) return { ok: false, pkg, n: rows.length };
+  const sorted = rows.map(r => r.fps).sort((a, b) => a - b), th = Math.max(2, Math.floor(rows.length / 3));
+  const head = rows.slice(0, th), tail = rows.slice(-th);
+  const a = { ok: true, pkg, n: rows.length, rows, dur: rows[rows.length - 1].t - rows[0].t };
+  a.fpsAvg = avg(rows.map(r => r.fps)); a.fpsMed = sorted[Math.floor(sorted.length / 2)]; a.fpsP5 = sorted[Math.floor(sorted.length * 0.05)];
+  a.stutter = rows.filter(r => r.ft >= 100).length; a.ftMax = maxv(rows.map(r => r.ft));
+  a.socAvg = avg(rows.map(r => r.soc)); a.socMax = maxv(rows.map(r => r.soc)); a.batAvg = avg(rows.map(r => r.bat)); a.batMax = maxv(rows.map(r => r.bat));
+  a.gpuAvg = avg(rows.map(r => r.gpu)); a.gpuHead = avg(head.map(r => r.gpu)); a.gpuTail = avg(tail.map(r => r.gpu));
+  a.busyAvg = avg(rows.map(r => r.busy)); a.fpsHead = avg(head.map(r => r.fps)); a.fpsTail = avg(tail.map(r => r.fps));
+  a.socHead = avg(head.map(r => r.soc)); a.socTail = avg(tail.map(r => r.soc));
+  a.boostPct = avg(rows.map(r => r.boost)) * 100; a.capAvg = avg(rows.map(r => r.cap));
+  a.fpsDrop = a.fpsHead > 0 ? (a.fpsHead - a.fpsTail) / a.fpsHead * 100 : NaN;
+  return a;
+}
+function diagnose(a) {
+  const d = [];
+  const gdrop = a.gpuHead > 0 ? (a.gpuHead - a.gpuTail) / a.gpuHead * 100 : 0;
+  if (gdrop >= 12 && a.socTail - a.socHead >= 4) d.push('Frekuensi GPU turun ' + f0(gdrop) + '% dari awal ke akhir sementara suhu SoC naik ' + f0(a.socTail - a.socHead) + ' °C. Pola ini khas thermal throttling.');
+  else if (gdrop >= 12) d.push('Frekuensi GPU turun ' + f0(gdrop) + '% selama sesi walau kenaikan suhu kecil. Bisa dari pembatas daya atau baterai.');
+  if (a.fpsDrop >= 15) d.push('FPS turun ' + f0(a.fpsDrop) + '% di sepertiga akhir dibanding awal.');
+  if (a.busyAvg >= 85) d.push('Beban GPU rata-rata ' + f0(a.busyAvg) + '%: GPU jadi penghambat. Turunkan resolusi atau efek grafis.');
+  else if (a.busyAvg >= 0 && a.busyAvg < 60 && a.fpsAvg < 50) d.push('Beban GPU hanya ' + f0(a.busyAvg) + '% tapi FPS rendah: kemungkinan CPU atau engine game yang menghambat.');
+  if (a.stutter >= 3) d.push(a.stutter + ' sampel punya frame lebih dari 100 ms (patah-patah) dengan frame terlama ' + f0(a.ftMax) + ' ms.');
+  if (a.batMax >= 42) d.push('Suhu baterai mencapai ' + f0(a.batMax) + ' °C, tergolong panas.');
+  if (!d.length) d.push('Tidak ada pola masalah yang jelas: FPS dan suhu relatif stabil.');
+  return d;
+}
+
+/* ---------- grafik ---------- */
+function lineChart(rows, series, unit) {
+  const W = 340, H = 118, L = 30, R = 6, T = 8, B = 16;
+  const t0 = rows[0].t, t1 = rows[rows.length - 1].t || 1;
+  let lo = Infinity, hi = -Infinity;
+  series.forEach(s => rows.forEach(r => { const v = r[s.key]; if (isFinite(v) && v >= 0) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }));
+  if (!isFinite(lo)) return '<small style="color:var(--muted)">Tidak ada data.</small>';
+  const pad = (hi - lo) * 0.1 || 1; lo = Math.max(0, lo - pad); hi += pad;
+  const X = t => L + (t - t0) / ((t1 - t0) || 1) * (W - L - R), Y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+  let g = '';
+  for (let i = 0; i <= 3; i++) { const v = lo + (hi - lo) * i / 3, y = Y(v); g += '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '"/><text x="2" y="' + (y + 3) + '">' + f0(v) + '</text>'; }
+  g += '<text x="' + L + '" y="' + (H - 3) + '">0</text><text x="' + (W - R - 22) + '" y="' + (H - 3) + '">' + mmss(t1 - t0) + '</text>';
+  const paths = series.map(s => {
+    let d = '', pen = false;
+    rows.forEach(r => { const v = r[s.key]; if (isFinite(v) && v >= 0) { d += (pen ? 'L' : 'M') + X(r.t).toFixed(1) + ' ' + Y(v).toFixed(1); pen = true; } else pen = false; });
+    return '<path d="' + d + '" fill="none" stroke="' + s.color + '" stroke-width="1.8" stroke-linejoin="round"/>';
+  }).join('');
+  const legend = '<div class="legend">' + series.map(s => '<span><i style="background:' + s.color + '"></i>' + esc(s.name) + '</span>').join('') + '<span>' + esc(unit) + '</span></div>';
+  return legend + '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '">' + g + paths + '</svg>';
+}
+
+/* ---------- sesi ---------- */
+let sessions = [], sel = [];
+async function loadSessions() {
+  const r = await exec('sh ' + MON + ' list');
+  sessions = r.out.split('\n').filter(l => l.startsWith('S|')).map(l => { const p = l.split('|'); return { file: p[1], label: p[2], start: +p[3], rows: +p[4], dur: +p[5] }; });
+  sel = sel.filter(f => sessions.some(s => s.file === f));
+  renderList();
+}
+function renderList() {
+  const el = $('#list');
+  if (!sessions.length) { el.innerHTML = '<small style="color:var(--muted)">Belum ada sesi. Rekam dulu di tab Rekam.</small>'; $('#b-compare').disabled = true; return; }
+  el.innerHTML = sessions.map(s => '<div class="sess"><input type="checkbox" data-f="' + esc(s.file) + '"' + (sel.includes(s.file) ? ' checked' : '') + '><div class="meta"><b>' + esc(s.label) + '</b><small>' +
+    (s.start ? new Date(s.start * 1000).toLocaleString('id-ID') : '-') + ' · ' + mmss(s.dur) + ' · ' + s.rows + ' sampel</small></div><button data-v="' + esc(s.file) + '">Lihat</button><button data-d="' + esc(s.file) + '">Hapus</button></div>').join('');
+  el.querySelectorAll('input').forEach(c => c.onchange = () => {
+    sel = sel.filter(f => f !== c.dataset.f); if (c.checked) sel.push(c.dataset.f);
+    if (sel.length > 2) { const x = sel.shift(); const o = el.querySelector('input[data-f="' + x + '"]'); if (o) o.checked = false; }
+    $('#b-compare').disabled = sel.length !== 2;
+  });
+  $('#b-compare').disabled = sel.length !== 2;
+  el.querySelectorAll('button[data-v]').forEach(b => b.onclick = () => view(b.dataset.v));
+  el.querySelectorAll('button[data-d]').forEach(b => b.onclick = async () => {
+    if (!await confirmBox('Hapus sesi?', 'Sesi ' + b.dataset.d + ' akan dihapus permanen.')) return;
+    await exec('sh ' + MON + ' del ' + b.dataset.d); toast('Dihapus'); $('#detail').innerHTML = ''; loadSessions();
+  });
+}
+async function fetchSession(file) { const r = await exec('sh ' + MON + ' get ' + file); const s = parseCsv(r.out); s.file = file; s.a = analyze(s); return s; }
+async function view(file) {
+  const s = await fetchSession(file), a = s.a;
+  if (!a.ok) { $('#detail').innerHTML = '<div class="card"><h2>' + esc(file) + '</h2><p class="t">Data game tidak cukup (' + a.n + ' sampel dengan FPS terbaca). Pastikan game berjalan di depan selama merekam.</p></div>'; return; }
+  const kv = (k, v) => '<span>' + k + '</span><span>' + v + '</span>';
+  $('#detail').innerHTML = '<div class="card"><h2>' + esc(s.meta.label || file) + '</h2><div class="kv">' +
+    kv('Aplikasi', esc(a.pkg)) + kv('Durasi data', mmss(a.dur)) + kv('FPS rata-rata', f1(a.fpsAvg)) + kv('FPS median', f1(a.fpsMed)) + kv('FPS rendah (p5)', f1(a.fpsP5)) +
+    kv('Frame terlama', f0(a.ftMax) + ' ms') + kv('Sampel patah-patah', a.stutter) + kv('Suhu SoC rata / maks', f0(a.socAvg) + ' / ' + f0(a.socMax) + ' °C') +
+    kv('Suhu baterai maks', f0(a.batMax) + ' °C') + kv('GPU rata-rata', f0(a.gpuAvg) + ' MHz') + kv('Beban GPU', f0(a.busyAvg) + ' %') + kv('Game Boost aktif', f0(a.boostPct) + ' % waktu') + '</div></div>' +
+    '<div class="card"><h2>Diagnosis (dugaan)</h2><ul class="diag">' + diagnose(a).map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></div>' +
+    '<div class="card"><h2>FPS</h2>' + lineChart(a.rows, [{ key: 'fps', name: 'FPS', color: '#4c8dff' }], 'fps') + '</div>' +
+    '<div class="card"><h2>Frekuensi GPU</h2>' + lineChart(a.rows, [{ key: 'gpu', name: 'GPU', color: '#34c759' }], 'MHz') + '</div>' +
+    '<div class="card"><h2>Suhu</h2>' + lineChart(a.rows, [{ key: 'soc', name: 'SoC', color: '#ff453a' }, { key: 'bat', name: 'Baterai', color: '#f5b301' }], '°C') + '</div>' +
+    (a.capAvg >= 0 ? '<div class="card"><h2>Batas CPU (pacing)</h2>' + lineChart(a.rows, [{ key: 'cap', name: 'Cap CPU besar', color: '#a78bfa' }], 'MHz') + '</div>' : '');
+  $('#detail').scrollIntoView({ behavior: 'smooth' });
+}
+$('#b-reload').onclick = loadSessions;
+$('#b-compare').onclick = async () => {
+  const [A, B] = await Promise.all(sel.map(fetchSession));
+  if (!A.a.ok || !B.a.ok) { toast('Salah satu sesi datanya tidak cukup'); return; }
+  const M = [['FPS rata-rata', 'fpsAvg', 1, true], ['FPS rendah (p5)', 'fpsP5', 1, true], ['Sampel patah-patah', 'stutter', 0, false], ['Frame terlama (ms)', 'ftMax', 0, false],
+    ['Suhu SoC rata-rata', 'socAvg', 1, false], ['Suhu SoC maks', 'socMax', 0, false], ['Suhu baterai maks', 'batMax', 0, false], ['GPU rata-rata (MHz)', 'gpuAvg', 0, true],
+    ['Beban GPU (%)', 'busyAvg', 0, null], ['Game Boost aktif (%)', 'boostPct', 0, null], ['FPS turun di akhir (%)', 'fpsDrop', 1, false]];
+  const fmt = (v, d) => d ? f1(v) : f0(v);
+  const rows = M.map(m => {
+    const x = A.a[m[1]], y = B.a[m[1]], diff = y - x;
+    let cls = ''; if (m[3] !== null && isFinite(diff) && Math.abs(diff) > (m[2] ? 0.5 : 0.5)) cls = (diff > 0) === m[3] ? 'good' : 'badv';
+    return '<tr><td>' + esc(m[0]) + '</td><td>' + fmt(x, m[2]) + '</td><td>' + fmt(y, m[2]) + '</td><td class="' + cls + '">' + (isFinite(diff) ? (diff > 0 ? '+' : '') + fmt(diff, m[2]) : '-') + '</td></tr>';
+  }).join('');
+  const df = B.a.fpsAvg - A.a.fpsAvg, dt = B.a.socMax - A.a.socMax;
+  let v;
+  if (Math.abs(df) < 2) v = 'Selisih FPS rata-rata ' + (df > 0 ? '+' : '') + f1(df) + ' berada dalam batas noise: <b>tidak ada perbaikan nyata</b>.';
+  else if (df > 0) v = 'Sesi B lebih tinggi ' + f1(df) + ' FPS dari A.';
+  else v = 'Sesi B <b>lebih rendah</b> ' + f1(-df) + ' FPS dari A. Tweak yang diuji tidak membantu.';
+  if (dt >= 3) v += ' Suhu SoC maks B lebih panas ' + f0(dt) + ' °C, yang bisa memicu throttling.';
+  else if (dt <= -3) v += ' Suhu SoC maks B lebih dingin ' + f0(-dt) + ' °C.';
+  $('#compare').innerHTML = '<div class="card"><h2>Perbandingan A / B</h2><table><tr><th></th><th>A: ' + esc(A.meta.label) + '</th><th>B: ' + esc(B.meta.label) + '</th><th>Selisih</th></tr>' + rows + '</table>' +
+    '<div class="verdict">' + v + '</div><span class="hint">Catatan: pastikan kedua sesi memakai game, adegan, dan kondisi suhu awal yang sama.</span></div>';
+  $('#compare').scrollIntoView({ behavior: 'smooth' });
+};
+
+/* ================= Tab Boost ================= */
+const SW = (key, label, desc, def, danger) => ({ key, type: 'sw', label, desc, def, danger });
+const RG = (key, label, desc, min, max, step, unit, def, dmin) => ({ key, type: 'rg', label, desc, min, max, step, unit, def, dmin });
+const SL = (key, label, desc, opts, def) => ({ key, type: 'sl', label, desc, opts, def });
+const GROUPS = [
+  { title: 'Pacing suhu adaptif', items: [
+    SW('PACE', 'Aktifkan pacing', 'Turunkan/naikkan batas CPU besar mengikuti suhu SoC saat game', '1'),
+    RG('PACE_TARGET_C', 'Suhu target SoC', 'Di atas ini batas CPU diturunkan satu langkah (dinaikkan lagi saat 4 °C di bawahnya)', 50, 75, 1, ' °C', '62'),
+    RG('PACE_MIN_PCT', 'Batas bawah CPU', 'CPU tidak diturunkan di bawah persen ini dari frekuensi maksimum', 40, 100, 5, '%', '60')] },
+  { title: 'GPU', items: [
+    RG('GPU_FLOOR_PCT', 'Lantai frekuensi GPU', 'Mengurangi jeda naik frekuensi. 0 = bawaan. Terlalu tinggi = panas.', 0, 60, 10, '%', '0', 50),
+    SL('GPU_ADRENOBOOST', 'Adrenoboost', 'Hanya jika kernel punya node ini', [['default', 'Bawaan'], ['0', 'Mati (0)'], ['1', 'Rendah (1)'], ['2', 'Sedang (2)'], ['3', 'Tinggi (3)']], 'default')] },
+  { title: 'Respons CPU', items: [
+    SL('SCHED_RATE_US', 'Rate limit schedutil', 'Lebih kecil = frekuensi naik lebih cepat (sedikit lebih boros). Hanya jika tersedia.', [['default', 'Bawaan'], ['1000', '1000 µs'], ['2000', '2000 µs'], ['4000', '4000 µs'], ['8000', '8000 µs']], 'default')] },
+  { title: 'Memori', items: [
+    SL('GAME_SWAPPINESS', 'Swappiness saat game', 'Lebih rendah = lebih jarang memakai swap/ZRAM (mengurangi beban CPU untuk kompresi)', [['default', 'Bawaan'], ['20', '20'], ['40', '40'], ['60', '60']], 'default'),
+    SW('KILL_BG', 'Bersihkan aplikasi latar saat game dibuka', 'Menjalankan am kill-all. Aplikasi lain perlu dimuat ulang setelahnya.', '0')] },
+  { title: 'Resolusi per game', items: [
+    SL('GAME_RES_PCT', 'Resolusi saat game', 'Diturunkan otomatis saat game terdeteksi dan dikembalikan saat ditutup. Efek terbesar pada game yang dibatasi GPU. Sebagian game memuat ulang layar saat ukuran berubah.', [['100', 'Bawaan'], ['85', '85%'], ['75', '75%'], ['67', '67%']], '100')] },
+  { title: 'Pengaman suhu', items: [
+    RG('BAT_TEMP_LIMIT_C', 'Batas suhu baterai', 'Di atas ini profil dibatalkan sampai dingin', 40, 48, 1, ' °C', '45'),
+    RG('SOC_TEMP_HARD_C', 'Batas keras suhu SoC', 'Di atas ini profil dibatalkan sampai dingin', 70, 90, 1, ' °C', '80')] }
+];
+const SAFE = /^[A-Za-z0-9._ -]*$/, PKG = /^[A-Za-z0-9._]+$/;
+let gcfg = {}, gorig = {}, gamesSel = [], gorigGames = '', apps = [], boostReady = false;
+const gdirty = () => Object.keys(gcfg).some(k => gcfg[k] !== gorig[k]) || gamesSel.join(' ') !== gorigGames;
+const grefresh = () => { $('#b-gsave').disabled = !gdirty(); };
+function gparse(txt) { const o = {}; txt.split('\n').forEach(l => { l = l.trim(); if (!l || l[0] === '#') return; const i = l.indexOf('='); if (i < 1) return; o[l.slice(0, i)] = l.slice(i + 1).replace(/^["']|["']$/g, ''); }); return o; }
+
+async function boostInit() {
+  gbStatus(); loadDisp();
+  if (boostReady) return;
+  const r = await exec('cat ' + GBCONF + ' 2>/dev/null'), f = gparse(r.out);
+  gcfg = { MASTER: f.MASTER != null ? f.MASTER : '1' };
+  GROUPS.forEach(g => g.items.forEach(it => { gcfg[it.key] = f[it.key] != null && f[it.key] !== '' ? f[it.key] : it.def; }));
+  gamesSel = (f.GAMES || '').split(' ').filter(Boolean); gorigGames = gamesSel.join(' '); gorig = { ...gcfg };
+  $('#gb-master').checked = gcfg.MASTER === '1';
+  $('#gb-master').onchange = e => { gcfg.MASTER = e.target.checked ? '1' : '0'; grefresh(); };
+  renderGames(); renderGForm(); boostReady = true; grefresh();
+}
+async function gbStatus() {
+  const r = await exec('sh ' + MOD + '/gamed.sh status'), p = r.out.trim().split('\n')[0].split('|');
+  const run = p[1] === '1', act = p[2] === '1', mode = p[5], kv = (a, b) => '<span>' + a + '</span><span>' + b + '</span>';
+  const st = !run ? 'tidak berjalan' : mode === '2' ? '<span class="hot">dilindungi (terlalu panas)</span>' : act ? 'AKTIF di game' : 'menunggu game dibuka';
+  $('#gbstat').innerHTML = kv('Daemon', st) + kv('Game aktif', esc(p[3] || '-')) + kv('Batas CPU besar', act && +p[4] > 0 ? esc(p[4]) + ' MHz' : '-');
+}
+function renderGames() {
+  $('#gchips').innerHTML = gamesSel.length ? gamesSel.map(g => '<span class="chipx">' + esc(g) + '<button data-g="' + esc(g) + '">×</button></span>').join('') : '<small style="color:var(--muted)">Belum ada game dipilih.</small>';
+  $('#gchips').querySelectorAll('button').forEach(b => b.onclick = () => { gamesSel = gamesSel.filter(x => x !== b.dataset.g); renderGames(); renderApps(); grefresh(); });
+}
+function renderApps() {
+  const q = $('#appq').value.trim().toLowerCase();
+  const list = apps.filter(a => !q || a.toLowerCase().includes(q)).slice(0, 120);
+  $('#applist').innerHTML = list.map(a => '<label class="pk"><input type="checkbox" data-a="' + esc(a) + '"' + (gamesSel.includes(a) ? ' checked' : '') + '><span>' + esc(a) + '</span></label>').join('') || '<small style="color:var(--muted)">Tidak ada hasil.</small>';
+  $('#applist').querySelectorAll('input').forEach(c => c.onchange = () => { gamesSel = gamesSel.filter(x => x !== c.dataset.a); if (c.checked) gamesSel.push(c.dataset.a); renderGames(); grefresh(); });
+}
+$('#b-loadapps').onclick = async () => {
+  const r = await exec('sh ' + MOD + '/game.sh list');
+  apps = r.out.split('\n').filter(l => l.startsWith('PKG|')).map(l => l.slice(4).trim()).filter(Boolean);
+  $('#apppick').hidden = false; renderApps(); toast(apps.length + ' aplikasi dimuat');
+};
+$('#appq').oninput = renderApps;
+
+function renderGForm() {
+  const f = $('#gbform'); f.innerHTML = '';
+  GROUPS.forEach(g => {
+    const card = document.createElement('div'); card.className = 'card'; card.innerHTML = '<h2>' + esc(g.title) + '</h2>';
+    g.items.forEach(it => {
+      const v = gcfg[it.key], w = document.createElement('div');
+      if (it.type === 'sw') {
+        w.className = 'row2'; w.innerHTML = '<div class="lbl"><b>' + esc(it.label) + '</b><small>' + esc(it.desc) + '</small></div><label class="switch"><input type="checkbox"' + (v === '1' ? ' checked' : '') + '><i></i></label>';
+        $('input', w).onchange = e => { gcfg[it.key] = e.target.checked ? '1' : '0'; grefresh(); };
+      } else if (it.type === 'rg') {
+        w.className = 'block'; w.innerHTML = '<div class="top"><div class="lbl"><b>' + esc(it.label) + '</b><small>' + esc(it.desc) + '</small></div><span class="val"><span class="n">' + esc(v) + '</span>' + esc(it.unit) + '</span></div><input type="range" min="' + it.min + '" max="' + it.max + '" step="' + it.step + '" value="' + esc(v) + '">';
+        $('input', w).oninput = e => { $('.n', w).textContent = e.target.value; gcfg[it.key] = e.target.value; grefresh(); };
+      } else {
+        w.className = 'block'; w.innerHTML = '<div class="lbl" style="margin-bottom:8px"><b>' + esc(it.label) + '</b><small>' + esc(it.desc) + '</small></div><select>' + it.opts.map(o => '<option value="' + esc(o[0]) + '"' + (o[0] === v ? ' selected' : '') + '>' + esc(o[1]) + '</option>').join('') + '</select>';
+        $('select', w).onchange = e => { gcfg[it.key] = e.target.value; grefresh(); };
+      }
+      card.appendChild(w);
+    });
+    f.appendChild(card);
+  });
+}
+$('#b-gsave').onclick = async () => {
+  if (gamesSel.some(g => !PKG.test(g))) { toast('Nama paket tidak valid'); return; }
+  const ch = Object.keys(gcfg).filter(k => gcfg[k] !== gorig[k]);
+  for (const k of ch) if (!SAFE.test(gcfg[k])) { toast('Nilai ' + k + ' tidak valid'); return; }
+  const risky = [];
+  GROUPS.forEach(g => g.items.forEach(it => { if (it.dmin != null && Number(gcfg[it.key]) >= it.dmin && ch.includes(it.key)) risky.push(it.label + ' tinggi: HP lebih panas dan boros baterai.'); }));
+  if (risky.length && !await confirmBox('Perubahan berisiko', risky.map(x => '• ' + x).join('\n') + '\n\nLanjutkan?')) return;
+  const args = ch.map(k => "'" + k + '=' + gcfg[k] + "'");
+  if (gamesSel.join(' ') !== gorigGames) args.push("'GAMES=" + gamesSel.join(' ') + "'");
+  if (args.length) { const r = await exec('sh ' + MOD + '/setcfg.sh ' + args.join(' ')); if (r.errno !== 0) { toast('Gagal menyimpan'); return; } }
+  gorig = { ...gcfg }; gorigGames = gamesSel.join(' '); grefresh();
+  await exec('sh ' + MOD + '/tools.sh restart'); toast('Tersimpan dan diterapkan'); gbStatus();
+};
+$('#b-gstop').onclick = async () => { await exec('sh ' + MOD + '/tools.sh stop'); toast('Dihentikan, nilai dikembalikan'); gbStatus(); };
+$('#b-gcheck').onclick = async () => {
+  const r = await exec('sh ' + MOD + '/check.sh'), I = { ok: '✓', warn: '!', bad: '✕', info: 'i' };
+  const rows = r.out.split('\n').filter(l => l.startsWith('CHK|')).map(l => l.split('|'));
+  $('#gchk').innerHTML = rows.map(x => '<div class="chk ' + esc(x[1]) + '"><i>' + (I[x[1]] || 'i') + '</i><div><b>' + esc(x[2]) + '</b><small>' + esc(x.slice(3).join('|')) + '</small></div></div>').join('');
+};
+async function loadDisp() {
+  const r = await exec('sh ' + MOD + '/display.sh status'), p = r.out.trim().split('|');
+  $('#dispstat').innerHTML = '<span>Ukuran</span><span>' + esc((p[1] || '').replace('Physical size:', 'fisik').replace('Override size:', 'override')) + '</span><span>Diubah modul</span><span>' + (p[3] === '1' ? '<span class="hot">ya</span>' : 'tidak') + '</span>';
+}
+$('#b-dset').onclick = async () => {
+  if (!await confirmBox('Turunkan resolusi?', 'Layar dan ukuran UI berubah sementara. Atur sebelum membuka game. Otomatis dikembalikan saat reboot, atau tekan Kembalikan.')) return;
+  const r = await exec('sh ' + MOD + '/display.sh set ' + $('#dispct').value); toast(r.out.startsWith('OK') ? 'Resolusi diubah' : (r.out.split('|')[1] || 'Gagal').trim()); loadDisp();
+};
+$('#b-dreset').onclick = async () => { await exec('sh ' + MOD + '/display.sh reset'); toast('Resolusi dikembalikan'); loadDisp(); };
+
+refreshRec();
+setInterval(() => { if (cur === 'boost' && !document.hidden) gbStatus(); }, 3000);
+setInterval(() => { if (cur === 'rec' && !document.hidden) refreshRec(); }, 2000);
+</script>
+</body>
+</html>
