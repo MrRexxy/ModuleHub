@@ -6,7 +6,7 @@
     <application
         android:name=".App"
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon-512.png"
         android:label="ModuleHub"
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
         android:usesCleartextTraffic="false">
