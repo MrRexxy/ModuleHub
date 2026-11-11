@@ -117,9 +117,85 @@ p.t{margin:0 0 10px}ol.t,ul.t{margin:0 0 10px;padding-left:20px}ol.t li,ul.t li{
 .pk input{width:20px;height:20px;accent-color:var(--accent);flex:none}
 .scroll{max-height:260px;overflow:auto;margin-top:8px}
 .sticky{position:sticky;bottom:calc(76px + var(--ib));z-index:6;padding:10px 0;background:linear-gradient(transparent,var(--bg) 40%)}
+.hero{position:relative;overflow:hidden;border-radius:30px;padding:20px 20px 16px;margin:0 0 12px;color:#fff;background:linear-gradient(135deg,#ff9a3c 0%,#ff6a00 52%,#e8420a 100%);box-shadow:0 14px 34px rgba(255,100,0,.35)}
+.hero::before{content:"";position:absolute;right:-50px;top:-60px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.18)}
+.hero::after{content:"";position:absolute;right:30px;bottom:-70px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.10)}
+.hero>*{position:relative;z-index:1}
+.hero-top{display:flex;align-items:center;gap:14px;justify-content:space-between}
+.hero-title{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.hero-sub{font-size:14px;opacity:.94;margin-top:2px}
+.hero-stats{display:flex;gap:10px;margin-top:16px}
+.hero-stats>div{flex:1;background:rgba(255,255,255,.2);border-radius:18px;padding:10px 12px}
+.hero-stats b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.hero-stats small{font-size:11px;opacity:.92}
+.hero .switch i{background:rgba(255,255,255,.24)!important;border:1px solid rgba(255,255,255,.45)!important}
+.hero .switch input:checked+i{background:rgba(255,255,255,.5)!important}
+.hero .switch i:after{background:#fff!important}
+.grow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.grow:first-child{border-top:0;padding-top:2px}
+.gtile{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:22px;flex:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.gmeta{flex:1;min-width:0}.gmeta b{display:block}.gmeta small{display:block;color:var(--muted);font-size:11.5px;word-break:break-all;margin-bottom:6px}
+.gmeta select{padding:7px 10px;font-size:13px;border-radius:10px}
+.gbtns{display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.gbtns .play{border:0;border-radius:99px;padding:9px 16px;font:inherit;font-weight:700;font-size:13px;color:#fff;background:linear-gradient(135deg,#ff9a3c,#ff5a00)}
+.gbtns .x{border:0;border-radius:99px;padding:6px;font:inherit;background:var(--surface2);color:var(--muted)}
+nav button{font-size:11.5px}
+/* ===== Tema iOS 27 (Liquid Glass). Hapus blok ini untuk menghilangkannya. ===== */
+body.ios{--t:.35;--font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,system-ui,sans-serif;
+ --bg:#0a0c12;--text:#f4f6fb;--muted:rgba(235,240,255,.64);--line:rgba(255,255,255,.13);
+ --surface:rgba(255,255,255,calc(.34 - .30*var(--t)));--surface2:rgba(255,255,255,.09);
+ --edge:rgba(255,255,255,.22);--shadow:0 10px 34px rgba(0,0,0,.35);--blur:blur(26px) saturate(180%);
+ --bar:rgba(10,12,18,.30);--toast:rgba(34,37,48,.78);--hi:rgba(255,255,255,.28);
+ font-family:var(--font);background:transparent;padding-bottom:calc(98px + var(--ib))}
+@media (prefers-color-scheme:light){body.ios{--bg:#eef1f8;--text:#14171f;--muted:rgba(30,40,70,.66);--line:rgba(20,30,60,.12);
+ --surface:rgba(255,255,255,calc(.90 - .60*var(--t)));--surface2:rgba(20,30,60,.06);--edge:rgba(255,255,255,.85);
+ --shadow:0 10px 30px rgba(40,60,120,.16);--bar:rgba(238,241,248,.50);--toast:rgba(255,255,255,.85);--hi:rgba(255,255,255,.9)}}
+body.ios::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+ background:radial-gradient(60% 40% at 15% 8%,rgba(76,141,255,.55),transparent 70%),radial-gradient(50% 35% at 92% 22%,rgba(191,90,242,.42),transparent 70%),
+ radial-gradient(60% 40% at 80% 92%,rgba(48,209,200,.38),transparent 70%),radial-gradient(50% 35% at 5% 78%,rgba(255,105,150,.30),transparent 70%),var(--bg)}
+@media (prefers-color-scheme:light){body.ios::before{background:radial-gradient(60% 40% at 15% 8%,rgba(76,141,255,.36),transparent 70%),radial-gradient(50% 35% at 92% 22%,rgba(191,90,242,.26),transparent 70%),
+ radial-gradient(60% 40% at 80% 92%,rgba(48,209,200,.28),transparent 70%),radial-gradient(50% 35% at 5% 78%,rgba(255,105,150,.22),transparent 70%),var(--bg)}}
+body.ios .appbar{background:var(--bar);-webkit-backdrop-filter:blur(22px) saturate(160%);backdrop-filter:blur(22px) saturate(160%);padding:20px 20px 12px}
+body.ios .appbar h1{font-size:23px;font-weight:700;letter-spacing:-.02em}
+body.ios .logo{border-radius:15px;background:linear-gradient(150deg,#7db3ff,#3b6bff);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 16px rgba(60,100,255,.45)}
+body.ios .pill{background:var(--surface);border:1px solid var(--edge);border-radius:99px;-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+body.ios .card{background:var(--surface);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--edge);border-radius:26px;
+ box-shadow:var(--shadow),inset 0 1px 0 var(--hi)}
+body.ios .card h2{color:var(--muted);letter-spacing:.07em}
+body.ios .banner,body.ios .warnbox,body.ios .verdict{background:var(--surface2);border-radius:18px}
+body.ios .tile{background:var(--surface2);border-radius:18px}
+body.ios .meter{background:var(--surface2)}
+body.ios nav{left:12px;right:12px;bottom:calc(10px + var(--ib));padding:6px;border-radius:32px;border:1px solid var(--edge);background:var(--surface);
+ -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--shadow),inset 0 1px 0 var(--hi)}
+body.ios nav button{border-radius:26px;font-weight:600}
+body.ios nav button.on{background:rgba(255,255,255,.18);color:#9cc4ff;box-shadow:inset 0 1px 0 var(--hi)}
+@media (prefers-color-scheme:light){body.ios nav button.on{background:rgba(255,255,255,.80);color:#1f5fe0}}
+body.ios .sticky{bottom:calc(88px + var(--ib));background:none}
+body.ios .btn{border-radius:99px;padding:13px 20px;background:var(--surface2);border:1px solid var(--edge);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+body.ios .btn.pri{border-color:rgba(255,255,255,.35);background:linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,0) 60%),var(--accent);color:#fff;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 22px rgba(76,141,255,.35)}
+body.ios .btn.danger{border-color:rgba(255,255,255,.3);background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,0) 60%),var(--bad);color:#fff}
+body.ios .sess button{border-radius:99px;background:var(--surface2)}
+body.ios .chipx{background:var(--surface2)}
+body.ios input[type=text],body.ios select{background:var(--surface2);border:1px solid var(--edge);border-radius:14px;color:var(--text)}
+body.ios .switch{width:54px;height:32px}
+body.ios .switch i{background:rgba(120,120,128,.36);border:0}
+body.ios .switch i:after{width:28px;height:28px;top:2px;left:2px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+body.ios .switch input:checked+i{background:var(--ok)}
+body.ios .switch input:checked+i:after{transform:translateX(22px);background:#fff}
+body.ios .seg{background:var(--surface2);border-radius:99px;padding:3px}
+body.ios .seg button{border-radius:99px;color:var(--muted)}
+body.ios .seg button.on{background:rgba(255,255,255,.24);color:var(--text);box-shadow:inset 0 1px 0 var(--hi),0 2px 8px rgba(0,0,0,.2)}
+@media (prefers-color-scheme:light){body.ios .seg button.on{background:#fff;color:#14171f}}
+body.ios #toast{background:var(--toast);color:var(--text);border:1px solid var(--edge);border-radius:99px;-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--shadow)}
+body.ios .modal .box{background:var(--surface);border:1px solid var(--edge);border-radius:32px;-webkit-backdrop-filter:blur(40px) saturate(180%);backdrop-filter:blur(40px) saturate(180%);box-shadow:var(--shadow)}
+body.ios pre.cmd{background:var(--surface2)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){body.ios{--surface:rgba(32,36,48,.96);--bar:rgba(10,12,18,.92)}}
+@media (prefers-color-scheme:light){@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){body.ios{--surface:rgba(255,255,255,.96);--bar:rgba(238,241,248,.94)}}}
+@media (prefers-reduced-transparency:reduce){body.ios{--t:0!important}}
 </style>
 </head>
-<body>
+<body class="ios">
 <div class="appbar">
   <div class="logo">M</div>
   <div><h1>ModuleHub</h1><small id="sub">Game Boost · terukur, bukan gimmick</small></div>
@@ -128,7 +204,25 @@ p.t{margin:0 0 10px}ol.t,ul.t{margin:0 0 10px;padding-left:20px}ol.t li,ul.t li{
 <main>
   <div class="banner" id="demo" hidden>Mode demo: tidak terhubung ke akses root, data yang tampil hanya contoh.</div>
 
-  <section id="tab-rec" class="on">
+  <section id="tab-game" class="on">
+    <div class="hero">
+      <div class="hero-top"><div><div class="hero-title">Mode Game</div><div class="hero-sub" id="hero-state">memuat…</div></div>
+        <label class="switch"><input type="checkbox" id="hero-master"><i></i></label></div>
+      <div class="hero-stats"><div><b id="hs-soc">-</b><small>SoC</small></div><div><b id="hs-bat">-</b><small>Baterai</small></div><div><b id="hs-cap">-</b><small>Batas CPU MHz</small></div></div>
+    </div>
+    <div class="card"><h2>Mode performa</h2>
+      <div class="seg" id="modeseg"><button data-m="saver">Hemat</button><button data-m="balanced">Seimbang</button><button data-m="performance">Performa</button><button data-m="custom">Kustom</button></div>
+      <span class="hint" id="modedesc"></span></div>
+    <div class="card"><h2>Fokus saat main</h2>
+      <div class="row2"><div class="lbl"><b>Blokir notifikasi pop-up</b><small>Banner notifikasi tidak muncul di atas game</small></div><label class="switch"><input type="checkbox" id="f-heads"><i></i></label></div>
+      <div class="row2"><div class="lbl"><b>Jangan ganggu</b><small>Hanya gangguan penting yang lolos. Hasilnya bisa beda tiap ROM.</small></div><label class="switch"><input type="checkbox" id="f-dnd"><i></i></label></div></div>
+    <div class="card"><h2>Game saya</h2><div id="gchips"></div>
+      <div class="tools" style="margin-top:10px"><button class="btn" id="b-loadapps">Tambah game</button></div>
+      <div id="apppick" hidden><input type="text" id="appq" placeholder="Cari nama paket…" style="margin-top:10px"><div class="scroll" id="applist"></div></div>
+      <span class="hint">Perubahan di tab ini langsung tersimpan. Pengaturan rinci ada di tab Lanjutan.</span></div>
+  </section>
+
+  <section id="tab-rec">
     <div class="card"><h2>Rekam sesi</h2>
       <div class="field"><div><span class="lab">Nama sesi</span><input type="text" id="label" value="baseline" maxlength="24" autocapitalize="off" spellcheck="false"></div></div>
       <div class="field">
@@ -160,12 +254,8 @@ p.t{margin:0 0 10px}ol.t,ul.t{margin:0 0 10px;padding-left:20px}ol.t li,ul.t li{
   </section>
 
   <section id="tab-boost">
-    <div class="card"><h2>Status Game Boost</h2><div class="kv" id="gbstat"></div>
-      <div class="row2" style="margin-top:12px"><div class="lbl"><b>Aktifkan Game Boost</b><small>Mati = tidak ada perubahan sistem sama sekali (untuk baseline)</small></div><label class="switch"><input type="checkbox" id="gb-master"><i></i></label></div></div>
-    <div class="card"><h2>Game yang diberi profil</h2><div id="gchips"><small style="color:var(--muted)">Belum ada game dipilih.</small></div>
-      <div class="tools" style="margin-top:8px"><button class="btn" id="b-loadapps">Pilih dari aplikasi terpasang</button></div>
-      <div id="apppick" hidden><input type="text" id="appq" placeholder="Cari nama paket…" style="margin-top:10px"><div class="scroll" id="applist"></div></div></div>
-    <div id="gbform"></div>
+    <div class="card"><h2>Status Game Boost</h2><div class="kv" id="gbstat"></div></div>
+        <div id="gbform"></div>
     <div class="card"><h2>Resolusi layar (manual)</h2>
       <small style="color:var(--muted)">Efek terbesar pada game yang dibatasi GPU. Atur SEBELUM membuka game. Layar dan ukuran UI berubah sementara, dan otomatis dikembalikan saat reboot.</small>
       <div class="field" style="margin-top:10px"><div><span class="lab">Skala</span><select id="dispct"><option value="85">85%</option><option value="75" selected>75%</option><option value="67">67%</option></select></div></div>
@@ -177,6 +267,10 @@ p.t{margin:0 0 10px}ol.t,ul.t{margin:0 0 10px;padding-left:20px}ol.t li,ul.t li{
   </section>
 
   <section id="tab-help">
+    <div class="card"><h2>Tampilan</h2>
+      <div class="seg" id="themeseg"><button data-th="ios">Liquid Glass</button><button data-th="std">Standar</button></div>
+      <div class="block" id="glassrow" style="margin-top:14px"><div class="top"><div class="lbl"><b>Transparansi kaca</b><small>Tinggi = lebih bening. Rendah = lebih mudah dibaca.</small></div><span class="val"><span id="gv">35</span>%</span></div><input type="range" id="glass" min="0" max="100" step="5" value="35"></div>
+      <span class="hint">Efek blur memakai GPU. Kalau HP terasa berat saat menggulir, pilih Standar.</span></div>
     <div class="card"><h2>Apa yang disentuh modul ini</h2>
       <p class="t">Semua perubahan hanya aktif selama game pilihanmu di depan, dan dikembalikan otomatis saat game ditutup.</p>
       <ul class="t">
@@ -225,9 +319,10 @@ p.t{margin:0 0 10px}ol.t,ul.t{margin:0 0 10px;padding-left:20px}ol.t li,ul.t li{
 </main>
 
 <nav>
-  <button data-tab="rec" class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>Rekam</button>
+  <button data-tab="game" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="11" rx="5.5"/><path d="M8 10.5v4M6 12.5h4"/><circle cx="16" cy="11.5" r=".9" fill="currentColor"/><circle cx="18" cy="13.5" r=".9" fill="currentColor"/></svg>Game</button>
+  <button data-tab="rec"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>Rekam</button>
   <button data-tab="sessions"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 15l3-4 3 3 5-7"/></svg>Sesi</button>
-  <button data-tab="boost"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Boost</button>
+  <button data-tab="boost"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Lanjutan</button>
   <button data-tab="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h0"/></svg>Bantuan</button>
 </nav>
 <div id="toast"></div>
@@ -277,9 +372,10 @@ function mock(cmd) {
   if (cmd.includes('monitor.sh stop')) { demoRec = null; return ok('OK|dihentikan'); }
   if (cmd.includes('monitor.sh status')) return ok(demoRec ? 'REC|1|demo.csv|' + Math.round((Date.now() - demoRec) / 1000) : 'REC|0');
   if (cmd.includes('monitor.sh last')) return ok(demoRec ? [10, 'com.game.demo', 540 + Math.round(Math.random() * 40), 38, 620, 85, 1400, 1800, 52, 34].join(',') : '');
-  if (cmd.includes('gamed.sh status')) return ok('GB|1|' + (demoGame ? '1|com.game.demo|1804|1' : '0||0|0'));
+  if (cmd.includes('gamed.sh status')) return ok('GB|1|' + (demoGame ? '1|com.game.demo|1804|1' : '0||0|0') + '|35|52');
+  if (cmd.includes('game.sh launch')) return ok('OK|dibuka');
   if (cmd.includes('game.sh list')) return ok(['com.game.demo', 'com.tencent.ig', 'com.mobile.legends', 'com.whatsapp', 'com.instagram.android'].map(x => 'PKG|' + x).join('\n'));
-  if (cmd.includes('cat ' + GBCONF)) return ok('MASTER=1\nGAMES="com.game.demo"\nPACE=1\nPACE_TARGET_C=62\nPACE_MIN_PCT=60\nGPU_FLOOR_PCT=0\n');
+  if (cmd.includes('cat ' + GBCONF)) return ok('MASTER=1\nGAMES="com.game.demo com.tencent.ig com.mobile.legends"\nGAME_PROFILE="balanced"\nGP_COM_TENCENT_IG="performance"\nGAME_FOCUS=1\nPACE=1\n');
   if (cmd.includes('setcfg.sh') || cmd.includes('tools.sh')) return ok('OK');
   if (cmd.includes('display.sh status')) return ok('DISP|Physical size: 1080x2340 |Physical density: 400 |0');
   if (cmd.includes('display.sh')) return ok('OK|demo');
@@ -304,12 +400,12 @@ const f1 = v => (v == null || !isFinite(v)) ? '-' : (Math.round(v * 10) / 10).to
 const f0 = v => (v == null || !isFinite(v)) ? '-' : Math.round(v).toString();
 
 /* ---------- tab ---------- */
-let cur = 'rec';
+let cur = 'game';
 function go(t) {
   cur = t;
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
   document.querySelectorAll('section').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t));
-  if (t === 'sessions') loadSessions(); if (t === 'rec') refreshRec(); if (t === 'boost') boostInit();
+  if (t === 'sessions') loadSessions(); if (t === 'rec') refreshRec(); if (t === 'boost' || t === 'game') boostInit();
   window.scrollTo(0, 0);
 }
 document.querySelectorAll('nav button').forEach(b => b.onclick = () => go(b.dataset.tab));
@@ -508,30 +604,93 @@ async function boostInit() {
   gbStatus(); loadDisp();
   if (boostReady) return;
   const r = await exec('cat ' + GBCONF + ' 2>/dev/null'), f = gparse(r.out);
-  gcfg = { MASTER: f.MASTER != null ? f.MASTER : '1' };
+  gcfg = { MASTER: f.MASTER != null ? f.MASTER : '1', GAME_PROFILE: f.GAME_PROFILE || 'custom', GAME_FOCUS: f.GAME_FOCUS || '0', GAME_DND: f.GAME_DND || '0' };
+  Object.keys(f).forEach(k => { if (k.startsWith('GP_')) gcfg[k] = f[k]; });
   GROUPS.forEach(g => g.items.forEach(it => { gcfg[it.key] = f[it.key] != null && f[it.key] !== '' ? f[it.key] : it.def; }));
   gamesSel = (f.GAMES || '').split(' ').filter(Boolean); gorigGames = gamesSel.join(' '); gorig = { ...gcfg };
-  $('#gb-master').checked = gcfg.MASTER === '1';
-  $('#gb-master').onchange = e => { gcfg.MASTER = e.target.checked ? '1' : '0'; grefresh(); };
-  renderGames(); renderGForm(); boostReady = true; grefresh();
+  renderGameTab(); renderGForm(); boostReady = true; grefresh();
+  if (gcfg.MASTER === '1') exec('sh ' + MOD + '/tools.sh ensure');
 }
 async function gbStatus() {
   const r = await exec('sh ' + MOD + '/gamed.sh status'), p = r.out.trim().split('\n')[0].split('|');
   const run = p[1] === '1', act = p[2] === '1', mode = p[5], kv = (a, b) => '<span>' + a + '</span><span>' + b + '</span>';
   const st = !run ? 'tidak berjalan' : mode === '2' ? '<span class="hot">dilindungi (terlalu panas)</span>' : act ? 'AKTIF di game' : 'menunggu game dibuka';
   $('#gbstat').innerHTML = kv('Daemon', st) + kv('Game aktif', esc(p[3] || '-')) + kv('Batas CPU besar', act && +p[4] > 0 ? esc(p[4]) + ' MHz' : '-');
+  heroUpdate(p);
+}
+const GAME_NAMES = { 'com.mobile.legends': 'Mobile Legends', 'com.tencent.ig': 'PUBG Mobile', 'com.dts.freefireth': 'Free Fire', 'com.dts.freefiremax': 'Free Fire MAX',
+  'com.miHoYo.GenshinImpact': 'Genshin Impact', 'com.activision.callofduty.shooter': 'Call of Duty Mobile', 'com.garena.game.codm': 'Call of Duty Mobile',
+  'com.supercell.clashofclans': 'Clash of Clans', 'com.roblox.client': 'Roblox', 'com.kiloo.subwaysurf': 'Subway Surfers', 'com.riotgames.league.wildrift': 'Wild Rift',
+  'com.proximabeta.mf.uamo': 'Arena Breakout', 'com.mojang.minecraftpe': 'Minecraft', 'com.game.demo': 'Game Demo' };
+const gameName = p => GAME_NAMES[p] || p.split('.').slice(-2).map(x => x.charAt(0).toUpperCase() + x.slice(1)).join(' ');
+const gpKey = p => 'GP_' + p.toUpperCase().replace(/\./g, '_').replace(/[^A-Z0-9_]/g, '');
+const hashHue = p => { let h = 0; for (const c of p) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+const MODE_DESC = { saver: 'Suhu target 55 °C, CPU boleh turun sampai 50%. Paling dingin dan irit baterai.',
+  balanced: 'Suhu target 62 °C, CPU turun sampai 60%. Cocok untuk kebanyakan game.',
+  performance: 'Target 66 °C, lantai GPU 30%, respons CPU lebih cepat, swappiness 40. Lebih panas dan lebih boros.',
+  custom: 'Memakai nilai rinci di tab Lanjutan.' };
+
+/* simpan langsung (tab Game): changes = {KUNCI: nilai}, games = daftar baru atau undefined */
+async function autoSave(changes, games) {
+  const args = [];
+  Object.keys(changes).forEach(k => { const v = String(changes[k]); if (SAFE.test(v)) { gcfg[k] = v; args.push("'" + k + '=' + v + "'"); } });
+  if (games !== undefined) { if (games.some(g => !PKG.test(g))) { toast('Nama paket tidak valid'); return false; } gamesSel = games; args.push("'GAMES=" + gamesSel.join(' ') + "'"); }
+  if (!args.length) return true;
+  const r = await exec('sh ' + MOD + '/setcfg.sh ' + args.join(' '));
+  if (r.errno !== 0) { toast('Gagal menyimpan'); return false; }
+  Object.keys(changes).forEach(k => { gorig[k] = String(changes[k]); });
+  if (games !== undefined) gorigGames = gamesSel.join(' ');
+  grefresh();
+  if (gcfg.MASTER === '1') await exec('sh ' + MOD + '/tools.sh ensure');
+  renderGameTab(); gbStatus(); return true;
+}
+function heroUpdate(p) {
+  const run = p[1] === '1', act = p[2] === '1', mode = p[5];
+  $('#hero-state').textContent = !run ? 'Mode Game mati' : mode === '2' ? 'Dilindungi: terlalu panas' : act ? 'Aktif di ' + gameName(p[3] || '') : 'Siaga, menunggu game dibuka';
+  $('#hs-soc').textContent = p[7] ? p[7] + '°' : '-'; $('#hs-bat').textContent = p[6] ? p[6] + '°' : '-';
+  $('#hs-cap').textContent = act && +p[4] > 0 ? p[4] : '-';
+}
+function renderGameTab() {
+  $('#hero-master').checked = gcfg.MASTER === '1';
+  $('#hero-master').onchange = async e => {
+    const v = e.target.checked ? '1' : '0';
+    await autoSave({ MASTER: v });
+    if (v === '0') await exec('sh ' + MOD + '/tools.sh stop');
+    gbStatus();
+  };
+  const m = gcfg.GAME_PROFILE || 'custom';
+  document.querySelectorAll('#modeseg button').forEach(b => { b.classList.toggle('on', b.dataset.m === m); b.onclick = () => autoSave({ GAME_PROFILE: b.dataset.m }); });
+  $('#modedesc').textContent = MODE_DESC[m] || '';
+  $('#f-heads').checked = gcfg.GAME_FOCUS === '1'; $('#f-heads').onchange = e => autoSave({ GAME_FOCUS: e.target.checked ? '1' : '0' });
+  $('#f-dnd').checked = gcfg.GAME_DND === '1'; $('#f-dnd').onchange = e => autoSave({ GAME_DND: e.target.checked ? '1' : '0' });
+  renderGames();
 }
 function renderGames() {
-  $('#gchips').innerHTML = gamesSel.length ? gamesSel.map(g => '<span class="chipx">' + esc(g) + '<button data-g="' + esc(g) + '">×</button></span>').join('') : '<small style="color:var(--muted)">Belum ada game dipilih.</small>';
-  $('#gchips').querySelectorAll('button').forEach(b => b.onclick = () => { gamesSel = gamesSel.filter(x => x !== b.dataset.g); renderGames(); renderApps(); grefresh(); });
+  const el = $('#gchips');
+  if (!gamesSel.length) { el.innerHTML = '<small style="color:var(--muted)">Belum ada game. Tekan Tambah game.</small>'; return; }
+  const OPT = [['default', 'Ikuti mode global'], ['saver', 'Hemat'], ['balanced', 'Seimbang'], ['performance', 'Performa']];
+  el.innerHTML = gamesSel.map(g => {
+    const gp = gcfg[gpKey(g)] || 'default', h = hashHue(g);
+    return '<div class="grow"><div class="gtile" style="background:linear-gradient(145deg,hsl(' + h + ',85%,62%),hsl(' + ((h + 30) % 360) + ',80%,48%))">' + esc(gameName(g).charAt(0).toUpperCase()) + '</div>' +
+      '<div class="gmeta"><b>' + esc(gameName(g)) + '</b><small>' + esc(g) + '</small><select data-gp="' + esc(g) + '">' +
+      OPT.map(o => '<option value="' + o[0] + '"' + (o[0] === gp ? ' selected' : '') + '>' + o[1] + '</option>').join('') + '</select></div>' +
+      '<div class="gbtns"><button class="play" data-play="' + esc(g) + '">Main</button><button class="x" data-g="' + esc(g) + '">×</button></div></div>';
+  }).join('');
+  el.querySelectorAll('select').forEach(sel => sel.onchange = () => autoSave({ [gpKey(sel.dataset.gp)]: sel.value }));
+  el.querySelectorAll('button[data-play]').forEach(b => b.onclick = async () => {
+    const r = await exec('sh ' + MOD + '/game.sh launch ' + b.dataset.play);
+    toast(r.out.startsWith('OK') ? 'Membuka ' + gameName(b.dataset.play) : (r.out.split('|')[1] || 'Gagal membuka').trim());
+  });
+  el.querySelectorAll('button[data-g]').forEach(b => b.onclick = () => autoSave({}, gamesSel.filter(x => x !== b.dataset.g)).then(renderApps));
 }
 function renderApps() {
   const q = $('#appq').value.trim().toLowerCase();
   const list = apps.filter(a => !q || a.toLowerCase().includes(q)).slice(0, 120);
   $('#applist').innerHTML = list.map(a => '<label class="pk"><input type="checkbox" data-a="' + esc(a) + '"' + (gamesSel.includes(a) ? ' checked' : '') + '><span>' + esc(a) + '</span></label>').join('') || '<small style="color:var(--muted)">Tidak ada hasil.</small>';
-  $('#applist').querySelectorAll('input').forEach(c => c.onchange = () => { gamesSel = gamesSel.filter(x => x !== c.dataset.a); if (c.checked) gamesSel.push(c.dataset.a); renderGames(); grefresh(); });
+  $('#applist').querySelectorAll('input').forEach(c => c.onchange = () => { gamesSel = gamesSel.filter(x => x !== c.dataset.a); if (c.checked) gamesSel.push(c.dataset.a); autoSave({}, (c.checked ? gamesSel.filter(x => x !== c.dataset.a).concat([c.dataset.a]) : gamesSel.filter(x => x !== c.dataset.a))); });
 }
 $('#b-loadapps').onclick = async () => {
+  if (!$('#apppick').hidden && apps.length) { $('#apppick').hidden = true; return; }
   const r = await exec('sh ' + MOD + '/game.sh list');
   apps = r.out.split('\n').filter(l => l.startsWith('PKG|')).map(l => l.slice(4).trim()).filter(Boolean);
   $('#apppick').hidden = false; renderApps(); toast(apps.length + ' aplikasi dimuat');
@@ -588,8 +747,26 @@ $('#b-dset').onclick = async () => {
 };
 $('#b-dreset').onclick = async () => { await exec('sh ' + MOD + '/display.sh reset'); toast('Resolusi dikembalikan'); loadDisp(); };
 
+/* ---------- tema ---------- */
+(function () {
+  let th = 'ios', gl = 35;
+  try { th = localStorage.getItem('mh_theme') || 'ios'; const g = localStorage.getItem('mh_glass'); if (g !== null && !isNaN(+g)) gl = +g; } catch (e) {}
+  const save = () => { try { localStorage.setItem('mh_theme', th); localStorage.setItem('mh_glass', String(gl)); } catch (e) {} };
+  function apply() {
+    document.body.classList.toggle('ios', th === 'ios');
+    document.body.style.setProperty('--t', String(gl / 100));
+    document.querySelectorAll('#themeseg button').forEach(b => b.classList.toggle('on', b.dataset.th === th));
+    $('#glassrow').style.display = th === 'ios' ? '' : 'none';
+    $('#glass').value = gl; $('#gv').textContent = gl;
+  }
+  document.querySelectorAll('#themeseg button').forEach(b => b.onclick = () => { th = b.dataset.th; save(); apply(); });
+  $('#glass').oninput = e => { gl = +e.target.value; $('#gv').textContent = gl; document.body.style.setProperty('--t', String(gl / 100)); save(); };
+  apply();
+})();
+
+boostInit();
 refreshRec();
-setInterval(() => { if (cur === 'boost' && !document.hidden) gbStatus(); }, 3000);
+setInterval(() => { if ((cur === 'boost' || cur === 'game') && !document.hidden) gbStatus(); }, 3000);
 setInterval(() => { if (cur === 'rec' && !document.hidden) refreshRec(); }, 2000);
 </script>
 </body>
