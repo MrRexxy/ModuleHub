@@ -6,6 +6,7 @@ case "$1" in
     else nohup sh $MODDIR/gamed.sh daemon >/dev/null 2>&1 </dev/null &
     fi
     echo "OK|daemon dimulai" ;;
+  ensure) if sh $MODDIR/gamed.sh status | grep -q '^GB|1|'; then echo "OK|sudah berjalan"; else sh $MODDIR/tools.sh restart; fi ;;
   stop) sh $MODDIR/gamed.sh stop; echo "OK|dihentikan dan dikembalikan ke bawaan" ;;
-  *) echo "pakai: tools.sh restart|stop" ;;
+  *) echo "pakai: tools.sh restart|ensure|stop" ;;
 esac

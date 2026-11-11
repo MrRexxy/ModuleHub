@@ -9,6 +9,7 @@ ORIG=$DATA/modulehub_gb_orig
 STATE=$DATA/modulehub_gb_state
 PIDF=$DATA/modulehub_gb_daemon.pid
 AUTORES=$DATA/modulehub_gb_autores
+SETORIG=$DATA/modulehub_gb_setorig
 KG=$SYS/class/kgsl/kgsl-3d0
 PACE_EVERY=${PACE_EVERY:-2}
 . $MODDIR/common.sh
@@ -16,7 +17,7 @@ PACE_EVERY=${PACE_EVERY:-2}
 load_conf() {
   MASTER=1; GAMES=""; POLL_SECS=3; PACE=1; PACE_TARGET_C=62; PACE_MIN_PCT=60
   GPU_FLOOR_PCT=0; GPU_ADRENOBOOST=default; SCHED_RATE_US=default
-  GAME_SWAPPINESS=default; KILL_BG=0; GAME_RES_PCT=100; BAT_TEMP_LIMIT_C=45; SOC_TEMP_HARD_C=80
+  GAME_SWAPPINESS=default; KILL_BG=0; GAME_RES_PCT=100; GAME_FOCUS=0; GAME_DND=0; GAME_PROFILE=custom; BAT_TEMP_LIMIT_C=45; SOC_TEMP_HARD_C=80
   [ -f "$CONF" ] && . "$CONF"
   case "$POLL_SECS" in 2|3|4|5|6|8|10) ;; *) POLL_SECS=3 ;; esac
 }
@@ -71,6 +72,32 @@ fg_game() {
   fi
 }
 
+sput() { # sput namespace key nilai  (menyimpan nilai asli sekali)
+  grep -q "^$1|$2|" $SETORIG 2>/dev/null || echo "$1|$2|$(settings get $1 $2 2>/dev/null)" >> $SETORIG
+  if settings put $1 $2 $3 >/dev/null 2>&1; then log "OK   settings $1 $2 = $3"; else log "FAIL settings $1 $2"; fi
+}
+srestore() {
+  [ -s "$SETORIG" ] || return
+  while IFS='|' read ns k v; do
+    if [ -z "$v" ] || [ "$v" = "null" ]; then settings delete $ns $k >/dev/null 2>&1; else settings put $ns $k "$v" >/dev/null 2>&1; fi
+  done < "$SETORIG"
+  : > "$SETORIG"; log "revert: pengaturan sistem dikembalikan"
+}
+
+# profil: per game (GP_<PAKET>) menang atas profil global (GAME_PROFILE); "custom" memakai nilai tab Boost
+apply_profile() {
+  key="$(echo "$1" | tr 'a-z.' 'A-Z_' | tr -cd 'A-Z0-9_')"
+  gp=""; eval "gp=\$GP_$key"
+  [ -n "$gp" ] && [ "$gp" != "default" ] || gp="$GAME_PROFILE"
+  case "$gp" in
+    saver)       PACE=1; PACE_TARGET_C=55; PACE_MIN_PCT=50; GPU_FLOOR_PCT=0; GPU_ADRENOBOOST=default; SCHED_RATE_US=default; KILL_BG=0 ;;
+    balanced)    PACE=1; PACE_TARGET_C=62; PACE_MIN_PCT=60; GPU_FLOOR_PCT=0; GPU_ADRENOBOOST=default; SCHED_RATE_US=default ;;
+    performance) PACE=1; PACE_TARGET_C=66; PACE_MIN_PCT=70; GPU_FLOOR_PCT=30; GPU_ADRENOBOOST=1; SCHED_RATE_US=2000; GAME_SWAPPINESS=40 ;;
+    *) gp=custom ;;
+  esac
+  log "profil: ${gp}"
+}
+
 set_state() { echo "$active|$gpkg|$((${CAP:-0}/1000))|$1" > $STATE; }
 
 find_big() {
@@ -82,6 +109,7 @@ find_big() {
 }
 
 enter_game() {
+  load_conf; apply_profile "$1"
   gpkg="$1"; : > $ORIG; log "=== GAME $gpkg ==="
   find_big; BIGFREQS="$(avail_sorted $BIGP)"; TOP="$(maxof $BIGFREQS)"; CAP="${TOP:-0}"
   FLOOR="$(pick_ge $(( ${TOP:-0} * PACE_MIN_PCT / 100 )) $BIGFREQS)"; [ -n "$FLOOR" ] || FLOOR=$CAP
@@ -103,6 +131,8 @@ enter_game() {
   esac
   # memori
   case "$GAME_SWAPPINESS" in ''|default|*[!0-9]*) ;; *) wr "$GAME_SWAPPINESS" $PROC/sys/vm/swappiness ;; esac
+  [ "$GAME_FOCUS" = "1" ] && sput global heads_up_notifications_enabled 0
+  [ "$GAME_DND" = "1" ] && sput global zen_mode 1
   if [ "$KILL_BG" = "1" ]; then am kill-all >/dev/null 2>&1 && log "app latar dibersihkan"; fi
   case "$GAME_RES_PCT" in ''|100|*[!0-9]*) ;; *)
     if [ "$GAME_RES_PCT" -ge 60 ] && [ "$GAME_RES_PCT" -lt 100 ]; then
@@ -113,6 +143,7 @@ enter_game() {
 }
 
 revert_all() {
+  srestore
   if [ -f "$AUTORES" ]; then sh $MODDIR/display.sh reset >/dev/null 2>&1; rm -f "$AUTORES"; log "revert: resolusi dikembalikan"; fi
   if [ -s "$ORIG" ]; then
     while IFS='|' read p v; do case "$p" in *min_freq) echo "$v" > "$p" 2>/dev/null ;; esac; done < "$ORIG"
@@ -120,7 +151,7 @@ revert_all() {
     : > "$ORIG"; log "revert: semua nilai dikembalikan"
   fi
 }
-exit_game() { revert_all; active=0; log "=== game ditutup ==="; CAP=0; set_state 0; gpkg=""; }
+exit_game() { revert_all; active=0; log "=== game ditutup ==="; CAP=0; gpkg=""; set_state 0; }
 
 tick() {
   bt="$(read_bat_temp)"; st="$(read_soc_temp)"
@@ -144,6 +175,7 @@ tick() {
 
 daemon() {
   echo $$ > $PIDF
+  srestore
   load_conf
   if [ "$MASTER" != "1" ]; then log "MASTER=0, daemon tidak aktif"; rm -f $PIDF; exit 0; fi
   [ -n "$GAMES" ] || log "belum ada game dipilih"
@@ -163,7 +195,8 @@ daemon() {
       fi
     else
       cool=0
-      if [ "$active" = 1 ]; then leave=$((leave+1)); [ "$leave" -ge 2 ] && exit_game; fi
+      if [ "$active" = 1 ]; then leave=$((leave+1)); [ "$leave" -ge 2 ] && exit_game
+      else load_conf; [ "$MASTER" = "1" ] || { log "MASTER=0, daemon berhenti"; rm -f $PIDF; exit 0; }; fi
     fi
   done
 }
@@ -177,6 +210,6 @@ case "$1" in
   status)
     run=0; [ -f "$PIDF" ] && read p < "$PIDF" && kill -0 "$p" 2>/dev/null && run=1
     s="0||0|0"; [ -f "$STATE" ] && read s < "$STATE"
-    echo "GB|$run|$s" ;;
+    echo "GB|$run|$s|$(read_bat_temp)|$(read_soc_temp)" ;;
   *) echo "pakai: gamed.sh daemon|stop|status|revert" ;;
 esac
